@@ -1,0 +1,47 @@
+sudo apt-get update && sudo apt-get upgrade -y
+timedatectl
+timedatectl set-ntp on
+sudo apt install git docker.io docker-compose -y
+
+cd && git clone https://github.com/Juneo-io/juneogo-binaries
+
+chmod +x ~/juneogo-binaries/juneogo
+chmod +x ~/juneogo-binaries/plugins/jevm
+chmod +x ~/juneogo-binaries/plugins/srEr2XGGtowDVNQ6YgXcdUb16FGknssLTGUFYg7iMqESJ4h8e
+
+mkdir -p ~/.juneogo/plugins && \
+mv ~/juneogo-binaries/plugins/jevm ~/.juneogo/plugins && \
+mv ~/juneogo-binaries/plugins/srEr2XGGtowDVNQ6YgXcdUb16FGknssLTGUFYg7iMqESJ4h8e ~/.juneogo/plugins
+
+tee /etc/systemd/system/juneod.service > /dev/null <<EOF 
+[Unit]
+Description=JUNEO Node
+After=network.target
+
+[Service]
+User=$USER
+Type=simple
+ExecStart=/root/juneogo-binaries/juneogo
+Restart=on-failure
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable juneod
+systemctl start juneod
+
+systemctl status juneod
+
+curl -X POST --data '{
+    "jsonrpc":"2.0",
+    "id"     :1,
+    "method" :"info.isBootstrapped",
+    "params": {
+        "chain":"JUNE"
+    }
+}' -H 'content-type:application/json;' 127.0.0.1:9650/ext/info
+
+journalctl -u juneod -f -o cat
