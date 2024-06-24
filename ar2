@@ -7,6 +7,7 @@ cd && git clone https://github.com/Juneo-io/juneogo-binaries
 
 chmod +x ~/juneogo-binaries/juneogo
 chmod +x ~/juneogo-binaries/plugins/jevm
+
 chmod +x ~/juneogo-binaries/plugins/srEr2XGGtowDVNQ6YgXcdUb16FGknssLTGUFYg7iMqESJ4h8e
 
 mkdir -p ~/.juneogo/plugins && \
